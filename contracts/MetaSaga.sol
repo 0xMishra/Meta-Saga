@@ -94,4 +94,69 @@ contract MetaSaga is ReentrancyGuard {
     _itemsSold.increment();
     payable(owner).transfer(listingPrice);
   }
+
+  function fetchMarket() public view returns (MarketItem[] memory) {
+    uint256 itemCount = _itemId.current();
+    uint256 unSoldItemCount = itemCount - _itemsSold.current();
+    uint256 currentIndex = 0;
+
+    MarketItem[] memory items = new MarketItem[](unSoldItemCount);
+    for (uint256 i = 0; i < itemCount; i++) {
+      if (_idToMarketItem[i + 1].owner == address(0)) {
+        uint256 currentId = _idToMarketItem[i + 1].itemId;
+        MarketItem storage currentItem = _idToMarketItem[currentId];
+        items[currentIndex] = currentItem;
+        currentIndex++;
+      }
+    }
+    return items;
+  }
+
+  function fetchMyNFTs() public view returns (MarketItem[] memory) {
+    uint256 totalItemCount = _itemId.current();
+    uint256 itemCount = 0;
+    uint256 currentIndex = 0;
+
+    for (uint256 i = 0; i < totalItemCount; i++) {
+      if (_idToMarketItem[i + 1].owner == msg.sender) {
+        itemCount++;
+      }
+    }
+
+    MarketItem[] memory myNFTs = new MarketItem[](itemCount);
+
+    for (uint256 i = 0; i < totalItemCount; i++) {
+      if (_idToMarketItem[i + 1].owner == msg.sender) {
+        uint256 currentId = _idToMarketItem[i + 1].itemId;
+        MarketItem storage currentItem = _idToMarketItem[currentId];
+        myNFTs[currentIndex] = currentItem;
+        currentIndex++;
+      }
+    }
+    return myNFTs;
+  }
+
+  function fetchItemsCreated() public view returns (MarketItem[] memory) {
+    uint256 totalItemsCount = _itemId.current();
+    uint256 itemCount = 0;
+    uint256 currentIndex = 0;
+
+    for (uint256 i; i < totalItemsCount; i++) {
+      if (_idToMarketItem[i + 1].seller == msg.sender) {
+        itemCount++;
+      }
+    }
+
+    MarketItem[] memory mySoldNFTs = new MarketItem[](itemCount);
+
+    for (uint256 i; i < totalItemsCount; i++) {
+      if (_idToMarketItem[i + 1].seller == msg.sender) {
+        uint256 currentId = _idToMarketItem[i + 1].itemId;
+        MarketItem storage currentItem = _idToMarketItem[currentId];
+        mySoldNFTs[currentIndex] = currentItem;
+        currentIndex++;
+      }
+    }
+    return mySoldNFTs;
+  }
 }
