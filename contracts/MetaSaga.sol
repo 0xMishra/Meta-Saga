@@ -95,7 +95,7 @@ contract MetaSaga is ReentrancyGuard {
     payable(owner).transfer(listingPrice);
   }
 
-  function fetchMarket() public view returns (MarketItem[] memory) {
+  function fetchMarketItems() public view returns (MarketItem[] memory) {
     uint256 itemCount = _itemId.current();
     uint256 unSoldItemCount = itemCount - _itemsSold.current();
     uint256 currentIndex = 0;
