@@ -8,8 +8,8 @@ module.exports = {
       chainId: 1337,
     },
     mumbai: {
-      url: "",
-      accounts: [""],
+      url: "RPC_URL",
+      accounts: [`0x${ACCOUNT_PRIVATE_KEY}`],
     },
   },
   solidity: {
