@@ -9,7 +9,7 @@ module.exports = {
     },
     mumbai: {
       url: "",
-      accounts: [process.env.privateKey],
+      accounts: [""],
     },
   },
   solidity: {
