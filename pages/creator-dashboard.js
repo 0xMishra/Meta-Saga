@@ -5,9 +5,10 @@ import { NFTAddress, MarketAddress } from "../config";
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/MetaSaga.sol/MetaSaga.json";
 
-export default function MyAssets() {
+export default function CreatorDashboard() {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
+  const [sold, setSold] = useState([]);
 
   useEffect(() => {
     loadNfts();
@@ -43,12 +44,17 @@ export default function MyAssets() {
         return item;
       })
     );
+    const soldItems = items.filter((i) => i.sold);
+    setSold(soldItems);
     setNfts(items);
     setLoadingState("loaded");
   }
   if (loadingState === "loaded" && !nfts.length) {
-    return <h1 className="px-20 py-10 text-3xl">No assets owned</h1>;
+    return (
+      <h1 className="px-20 py-10 text-3xl">No items in the marketplace</h1>
+    );
   }
+
   return (
     <div className="flex justify-center">
       <div className="p-4">
@@ -67,6 +73,29 @@ export default function MyAssets() {
             );
           })}
         </div>
+      </div>
+
+      <div className="px-4">
+        {Boolean(sold.length) && (
+          <div>
+            <h2 className="text-2xl py-2">Items sold</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+              {sold.map((nft, i) => {
+                return (
+                  <div
+                    key={i}
+                    className="border-1 shadow rounded-xl overflow-hidden"
+                  >
+                    <img src={nft.image} alt="" />
+                    <p className="text-2xl mb-4 font-bold text-white">
+                      {nft.price} MATIC
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
