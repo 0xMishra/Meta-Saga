@@ -26,24 +26,24 @@ export default function Home() {
     const data = await marketContract.fetchMarketItems();
     console.log(data);
 
-    // const items = await Promise.all(
-    //   data.map(async (i) => {
-    //     const tokenUri = await tokenContract.tokenURI(i.tokenId);
-    //     const meta = await axios.get(tokenUri);
-    //     let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-    //     let item = {
-    //       price,
-    //       tokenId: i.tokenId.toNumber(),
-    //       seller: i.seller,
-    //       owner: i.owner,
-    //       image: meta.data.image,
-    //       name: meta.data.name,
-    //       description: meta.data.description,
-    //     };
-    //     return item;
-    //   })
-    // );
-    // setNfts(items);
+    const items = await Promise.all(
+      data.map(async (i) => {
+        const tokenUri = await tokenContract.tokenURI(i.tokenId);
+        const meta = await axios.get(tokenUri);
+        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+        let item = {
+          price,
+          tokenId: i.tokenId.toNumber(),
+          seller: i.seller,
+          owner: i.owner,
+          image: meta.data.image,
+          name: meta.data.name,
+          description: meta.data.description,
+        };
+        return item;
+      })
+    );
+    setNfts(items);
     setLoading("loaded");
   }
 
@@ -55,7 +55,7 @@ export default function Home() {
     const signer = provider.getSigner();
     const contract = new ethers.Contract(MarketAddress, Market.abi, signer);
     const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
-    const txn = await createMarketSale(NFTAddress, nft.tokenId, {
+    const txn = await contract.createMarketSale(NFTAddress, nft.tokenId, {
       value: price,
     });
     await txn.wait();
