@@ -8,7 +8,7 @@ module.exports = {
       chainId: 1337,
     },
     mumbai: {
-      url: "RPC_URL",
+      url: "",
       accounts: [`0x${ACCOUNT_PRIVATE_KEY}`],
     },
   },

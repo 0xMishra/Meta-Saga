@@ -4,6 +4,7 @@ import Web3Modal from "web3modal";
 import { NFTAddress, MarketAddress } from "../config";
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/MetaSaga.sol/MetaSaga.json";
+import axios from "axios";
 
 export default function MyAssets() {
   const [nfts, setNfts] = useState([]);
@@ -26,23 +27,27 @@ export default function MyAssets() {
       signer
     );
     const data = await marketContract.fetchMyNFTs();
-    console.log(data);
 
     const items = await Promise.all(
       data.map(async (i) => {
         const tokenUri = await tokenContract.tokenURI(i.tokenId);
         const meta = await axios.get(tokenUri);
         let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+        console.log(price);
         let item = {
           price,
           tokenId: i.tokenId.toNumber(),
           seller: i.seller,
           owner: i.owner,
-          image: meta.data.image,
+          image: meta.data.Image,
         };
         return item;
       })
     );
+    const tokenUri = await tokenContract.tokenURI(items[0].tokenId);
+    const meta = await axios.get(tokenUri);
+
+    // console.log(meta);
     setNfts(items);
     setLoadingState("loaded");
   }
@@ -57,7 +62,7 @@ export default function MyAssets() {
             return (
               <div
                 key={i}
-                className="border-1 shadow rounded-xl overflow-hidden"
+                className="border-1 shadow rounded-xl overflow-hidden bg-black"
               >
                 <img src={nft.image} alt="" />
                 <p className="text-2xl mb-4 font-bold text-white">

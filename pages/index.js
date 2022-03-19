@@ -36,7 +36,7 @@ export default function Home() {
           tokenId: i.tokenId.toNumber(),
           seller: i.seller,
           owner: i.owner,
-          image: meta.data.image,
+          image: meta.data.Image,
           name: meta.data.name,
           description: meta.data.description,
         };
@@ -97,7 +97,7 @@ export default function Home() {
                   </p>
                   <button
                     className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
-                    onClick={buyNfts()}
+                    onClick={() => buyNfts(nft)}
                   >
                     BUY
                   </button>

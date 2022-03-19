@@ -29,7 +29,7 @@ export default function CreateItem() {
     }
   }
 
-  async function createItem() {
+  async function createItem(e) {
     const { name, description, price } = formInput;
     if (!name || !description || !price) {
       return;
@@ -39,8 +39,9 @@ export default function CreateItem() {
       description,
       Image: fileUrl,
     });
+    console.log(data);
     try {
-      const added = await client.add(file);
+      const added = await client.add(data);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       createSale(url);
     } catch (error) {
@@ -109,7 +110,7 @@ export default function CreateItem() {
           <img src={fileUrl} alt="" width={350} className="rounded mt-4" />
         )}
         <button
-          onClick={createItem}
+          onClick={(e) => createItem(e)}
           className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg"
         >
           Create Digital Asset
